@@ -2,11 +2,11 @@
 
 defineModule(sim, list(
   name = "forestHarvest",
-  description = "A toy model of forest harvest by forest age and type", 
-  keywords = c("forest", "age", "composition"), 
+  description = "A toy model of forest harvest by forest age and type",
+  keywords = c("forest", "age", "composition"),
   authors = person("Ceres", "Barros", email = "cbarros@mail.ubc.ca", role = c("aut", "cre")),
   childModules = character(0),
-  version = list(SpaDES.core = "0.1.1.9000", forestHarvest = "0.0.1"),
+  version = list(SpaDES.core = "0.1.1.9000", forestHarvest = "0.0.2"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
@@ -84,7 +84,7 @@ forestHarvestMapFun <- function(sim) {
 
   levels(sim$harvMap)[[1]] <- data.frame(ID = c(1,9999), Class = c("Harvest", "Non-harvest"))
 
-  setColors(sim$harvMap, n = 2) <- RColorBrewer::brewer.pal(n = 2, name = "BrBG")[c(1,3)]
+  setColors(sim$harvMap, n = 2) <- RColorBrewer::brewer.pal(n = 3, name = "BrBG")[c(1,3)]
 
   ## make a mask of vegetation that is older than the harvest age threshold
   age4harvest <- sim$ageMap
