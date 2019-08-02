@@ -1,17 +1,15 @@
-
-
 defineModule(sim, list(
-  name = "forestHarvest",
+  name = "forestHarvest-SpaDESmodule",
   description = "A toy model of forest harvest by forest age and type", 
   keywords = c("forest", "age", "composition"), 
   authors = person("Ceres", "Barros", email = "cbarros@mail.ubc.ca", role = c("aut", "cre")),
   childModules = character(0),
-  version = list(SpaDES.core = "0.1.1.9000", forestHarvest = "0.0.1"),
+  version = list(SpaDES.core = "0.1.1.9000", forestHarvest-SpaDESmodule = "0.0.1"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
   citation = list("citation.bib"),
-  documentation = list("README.txt", "forestHarvest.Rmd"),
+  documentation = list("README.txt", "forestHarvest-SpaDESmodule.Rmd"),
   reqdPkgs = list("raster", "RColorBrewer", "dplyr"),
   parameters = rbind(
     defineParameter("harvAge", "numeric", 50, NA, NA, desc = "Tree age for harvesting"),
@@ -34,25 +32,25 @@ defineModule(sim, list(
 ## event types
 #   - type `init` is required for initialiazation
 
-doEvent.forestHarvest = function(sim, eventTime, eventType, debug = FALSE) {
+doEvent.forestHarvest-SpaDESmodule = function(sim, eventTime, eventType, debug = FALSE) {
   switch(
     eventType,
     init = {
       # do stuff for this event
-      sim <- forestHarvestInit(sim)
+      sim <- forestHarvest-SpaDESmoduleInit(sim)
 
       # schedule future event(s)
-      sim <- scheduleEvent(sim, P(sim)$startTime, "forestHarvest", "forestHarvestMaps")
-      sim <- scheduleEvent(sim, P(sim)$startTime + P(sim)$.plotInitialTime, "forestHarvest", "plot")
+      sim <- scheduleEvent(sim, P(sim)$startTime, "forestHarvest-SpaDESmodule", "forestHarvest-SpaDESmoduleMaps")
+      sim <- scheduleEvent(sim, P(sim)$startTime + P(sim)$.plotInitialTime, "forestHarvest-SpaDESmodule", "plot")
 
     },
-    forestHarvestMaps = {
-      sim <- forestHarvestMapFun(sim)
-      sim <- scheduleEvent(sim, time(sim) + P(sim)$returnInterval, "forestHarvest", "forestHarvestMaps")
+    forestHarvest-SpaDESmoduleMaps = {
+      sim <- forestHarvest-SpaDESmoduleMapFun(sim)
+      sim <- scheduleEvent(sim, time(sim) + P(sim)$returnInterval, "forestHarvest-SpaDESmodule", "forestHarvest-SpaDESmoduleMaps")
     },
     plot = {
       Plot(sim$harvMap)
-      sim <- scheduleEvent(sim, time(sim) + P(sim)$.plotInterval, "forestHarvest", "plot")
+      sim <- scheduleEvent(sim, time(sim) + P(sim)$.plotInterval, "forestHarvest-SpaDESmodule", "plot")
     },
     warning(paste("Undefined event type: '", current(sim)[1, "eventType", with = FALSE],
                   "' in module '", current(sim)[1, "moduleName", with = FALSE], "'", sep = ""))
@@ -66,14 +64,14 @@ doEvent.forestHarvest = function(sim, eventTime, eventType, debug = FALSE) {
 #   - keep event functions short and clean, modularize by calling subroutines from section below.
 
 ### template initialization
-forestHarvestInit <- function(sim) {
+forestHarvest-SpaDESmoduleInit <- function(sim) {
   sim$harvMap <- sim$vegMap
   return(invisible(sim))
 }
 
 
 ### template for your event1
-forestHarvestMapFun <- function(sim) {
+forestHarvest-SpaDESmoduleMapFun <- function(sim) {
   ## only harvest coniferous forest
   harVeg <- raster::levels(sim$vegMap)[[1]]$ID[grep("coniferous", raster::levels(sim$vegMap)[[1]]$Class)]
 
